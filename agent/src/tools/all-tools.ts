@@ -1,4 +1,4 @@
-import { UploadImageTool } from "./upload-image.js"; // Добавьте этот импорт
+import { UploadImageTool } from "./upload-image.js";
 
 export interface ToolConfig<T = any> {
   definition: {
