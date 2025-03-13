@@ -13,9 +13,11 @@ const bot = new Telegraf(token);
 bot.on('text', async (ctx) => {
     try {
         const message = ctx.message.text;
-        console.log('Received message:', message);
+        const user = ctx.message.from;
+        const userName = user.username || `${user.first_name} ${user.last_name}`;
+        console.log(`Received message from ${userName}: ${message}`);
 
-        await ctx.reply(`You said: ${message}`);
+        await ctx.reply(`Message from ${userName}: ${message}`);
         console.log('Reply sent');
     } catch (error) {
         console.error('Error during message processing:', error);
