@@ -21,9 +21,11 @@
   },
   "dependencies": {
     "@types/express": "^5.0.0",
+    "@types/ws": "^8.18.0",
     "axios": "^1.8.3",
     "express": "^4.21.2",
-    "telegraf": "^4.16.3"
+    "telegraf": "^4.16.3",
+    "ws": "^8.18.1"
   },
   "husky": {
     "hooks": {
