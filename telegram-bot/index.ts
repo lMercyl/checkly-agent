@@ -33,8 +33,8 @@ ws.on('message', async (message) => {
         if (data.type === 'response') {
             const chatId = data.chatId;
             const responseMessage = JSON.parse(data.message);
-            await bot.telegram.sendMessage(chatId, responseMessage.text.value);
-            console.log(`Sent response to chat ${chatId}: ${responseMessage.text.value}`);
+            await bot.telegram.sendMessage(chatId, responseMessage);
+            console.log(`Sent response to chat ${chatId}: ${responseMessage}`);
         }
     } catch (error) {
         console.error('Error processing WebSocket message:', error);
@@ -58,6 +58,15 @@ bot.on('message', async (ctx) => {
 
             // Отправляем данные по WebSocket
             ws.send(JSON.stringify({ type: 'text', userName, chatType, chatId, message }));
+        } else if ('photo' in ctx.message) {
+            const photo = ctx.message.photo[ctx.message.photo.length - 1]; // Получаем наибольшее разрешение
+            const fileId = photo.file_id;
+            console.log(`Received photo from ${userName} in ${chatType} chat: ${fileId}`);
+            const fileLink = await bot.telegram.getFileLink(fileId);
+            console.log(`Photo link: ${fileLink}`);
+
+            // Отправляем данные по WebSocket
+            ws.send(JSON.stringify({ type: 'photo', userName, chatType, chatId, fileId, fileLink }));
         } else {
             console.log(`Received unsupported message type from ${userName} in ${chatType} chat`);
         }
