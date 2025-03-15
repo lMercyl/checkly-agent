@@ -1,3 +1,5 @@
+import { AnalyzeDataTool } from "./analyze-data.js";
+import { GenerateReportTool } from "./generate-report.js";
 import { UploadImageTool } from "./upload-image.js";
 
 export interface ToolConfig<T = any> {
@@ -17,5 +19,7 @@ export interface ToolConfig<T = any> {
 }
 
 export const tools: Record<string, ToolConfig> = {
-  upload_image: UploadImageTool,
+  upload_imageНет: UploadImageTool,
+  analyze_data: AnalyzeDataTool,
+  generate_report: GenerateReportTool,
 };

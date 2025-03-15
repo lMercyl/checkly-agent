@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { tools } from '../tools/all-tools.js';
+import { tools } from '../tools/assistant-tools/all-tools.js';
 
 export async function handleRunToolCalls(
   run: Run,
