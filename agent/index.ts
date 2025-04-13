@@ -34,10 +34,45 @@ wss.on('connection', async (ws) => {
 
                 // Отправляем результат назад клиенту
                 ws.send(JSON.stringify({ type: 'response', chatId: data.chatId, message: JSON.stringify(result) }));
-            } else if (data.type === 'photo') {
-                // Обработка фотографий
-                console.log(`Received photo link: ${data.fileLink}`);
-                // Здесь можно добавить логику для обработки фотографий
+            } else if (data.type === 'image') {
+                try {
+
+                    const thread = await client.beta.threads.create();
+
+                    
+                    await client.beta.threads.messages.create(thread.id, {
+                        role: 'user',
+                        content: [
+                            {   type: 'text', text: 'Разобрать чек и извлечь информацию (используется, когда тебе присылают фотографию чека) Пришли отчет' },
+                            { type: 'image_url', image_url: { url: 'https://api.telegram.org/file/bot7483917044:AAHVgcZTuDhq4UaXzfvw3w7VQ78bqDb9zek/photos/file_14.jpg', detail: 'high' } }, // Передаем URL изображения из данных);
+                        ]});
+
+                        const run = await createRun(client, thread, assistant.id);
+                    console.log('Run created:', run.id);
+            
+                    // Ожидаем завершения выполнения
+                    const result = await performRun(run, client, thread);
+                    console.log('Run completed:', result);
+            
+                    // Отправляем результат клиенту
+                    ws.send(
+                        JSON.stringify({
+                            type: 'response',
+                            chatId: data.chatId,
+                            message: result,
+                        })
+                    );
+            
+                    console.log('Sending result:', result);
+                } catch (error) {
+                    console.error('Error during image processing:', error);
+                    ws.send(
+                        JSON.stringify({
+                            error: 'Failed to process the image.',
+                            details: error instanceof Error ? error.message : 'Unknown error',
+                        })
+                    );
+                }
             } else {
                 console.log('Unsupported message type');
                 ws.send(JSON.stringify({ error: 'Unsupported message type' }));

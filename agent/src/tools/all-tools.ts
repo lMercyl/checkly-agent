@@ -1,3 +1,4 @@
+import { AnalyzeReceiptTool } from "./analyze-receipt-tool.js";
 import { UploadImageTool } from "./upload-image.js";
 
 export interface ToolConfig<T = any> {
@@ -16,6 +17,7 @@ export interface ToolConfig<T = any> {
   handler: (args: T) => Promise<any>;
 }
 
-export const tools: Record<string, ToolConfig> = {
-  upload_image: UploadImageTool,
+export const tools = {
+  // upload_image: UploadImageTool,
+  // analyze_receipt: AnalyzeReceiptTool,
 };
