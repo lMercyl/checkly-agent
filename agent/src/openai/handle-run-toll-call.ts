@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { Thread } from 'openai/resources/beta/threads/threads';
 import { Run } from 'openai/resources/beta/threads/runs/runs';
-import { tools } from '../tools/all-tools.js';
+import { tools, ToolConfig } from '../tools/all-tools.js';
 
 export async function handleRunToolCalls(
   run: Run,
@@ -13,7 +13,8 @@ export async function handleRunToolCalls(
 
   const toolOutputs = await Promise.all(
     toolCalls.map(async (tool) => {
-      const toolConfig = tools[tool.function.name];
+      const toolName = tool.function.name as keyof typeof tools;
+      const toolConfig: ToolConfig | undefined = tools[toolName];
       if (!toolConfig) {
         console.log(`Tool ${tool.function.name} not found`);
         return null;
@@ -21,7 +22,7 @@ export async function handleRunToolCalls(
 
       try {
         const args = JSON.parse(tool.function.arguments);
-        const output = await toolConfig.handler(args);
+        const output = await (toolConfig as ToolConfig).handler(args);
         return {
           tool_call_id: tool.id,
           output: String(output),

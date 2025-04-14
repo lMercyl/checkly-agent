@@ -11,7 +11,6 @@ export async function createRun(
     assistant_id: assistantId,
   });
 
-  // wait for the run to complete and keeep polling
   while (run.status === 'in_progress' || run.status === 'queued') {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     run = await client.beta.threads.runs.retrieve(thread.id, run.id);
